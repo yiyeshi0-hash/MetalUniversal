@@ -55,7 +55,12 @@ jobs:
           echo "=== MTLFXFrameInterpolator.h ==="
           cat "$(xcrun --show-sdk-path)/System/Library/Frameworks/MetalFX.framework/Headers/MTLFXFrameInterpolator.h" 2>/dev/null
       - name: build
-        run: ./gradlew buildMacNative build
+        run: |
+          # ★ 本 fork 改动:除 macOS 外,同时编 iOS 原生产物
+          #   buildIOSNative -> natives/ios/libmetallum.dylib(iOS,含 MetalFX 12 个 fx 符号)
+          #   buildIOSSpvc   -> natives/ios/libspvc.dylib
+          ./gradlew buildMacNative build
+          ./gradlew buildIOSNative buildIOSSpvc build
       - name: capture build artifacts
         uses: actions/upload-artifact@v7
         with:
